@@ -6,15 +6,25 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin-webpack4')
 const path = require('path')
+const rawArgs = process.argv.slice(2)
+
+console.log(rawArgs)
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 
+let isDev = rawArgs[1] !== 'production'
+
 module.exports = {
+  mode: isDev ? 'development' : 'production',
   entry: './src/index.js',
   output: {
+    publicPath: './dist',
+    // path: './dist',
     filename: 'main.js',
+    library: 'ZXWebRTC',
+    libraryTarget: 'umd'
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
@@ -55,13 +65,13 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: './dist/img/[name].[hash:7].[ext]'
+          name: './static/[name].[hash:7].[ext]'
         }
       },
       // https://www.npmjs.com/package/webp-loader
       {
         test: /\.webp$/,
-        loaders: [
+        use: [
           'file-loader',
           'webp-loader'
         ]
@@ -71,7 +81,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: './dist/media/[name].[hash:7].[ext]'
+          name: './static/[name].[hash:7].[ext]'
         }
       },
       {
@@ -79,7 +89,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: './dist/fonts/[name].[hash:7].[ext]'
+          name: './static/[name].[hash:7].[ext]'
         }
       }
     ]
