@@ -171,9 +171,4 @@ ZXWebRTC.prototype.download = function () {
   a.click()
 }
 
-
-
-
-
-
 export default ZXWebRTC
