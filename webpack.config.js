@@ -5,6 +5,7 @@
  */
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin-webpack4')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const path = require('path')
 const rawArgs = process.argv.slice(2)
 
@@ -20,8 +21,7 @@ module.exports = {
   mode: isDev ? 'development' : 'production',
   entry: './src/index.js',
   output: {
-    publicPath: './dist',
-    // path: './dist',
+    path: path.resolve(__dirname, 'dist'),
     filename: 'main.js',
     library: 'ZXWebRTC',
     libraryTarget: 'umd'
@@ -95,6 +95,7 @@ module.exports = {
     ]
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
       template: './index.html',
