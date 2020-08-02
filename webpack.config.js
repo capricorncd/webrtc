@@ -17,7 +17,16 @@ function resolve (dir) {
 
 let isDev = rawArgs[1] !== 'production'
 
-module.exports = {
+const htmlOptions = {
+  template: './index.html',
+  scripts: isDev
+    ? ''
+    : '<script src="https://cdn.jsdelivr.net/npm/vue"></script>\n' +
+    '<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>\n' +
+    '<script src="https://unpkg.com/element-ui/lib/index.js"></script>'
+}
+
+const webpackConfig = {
   mode: isDev ? 'development' : 'production',
   entry: './src/index.js',
   output: {
@@ -37,7 +46,9 @@ module.exports = {
     rules: [
       {
         test: /\.vue$/,
-        loader: 'vue-loader'
+        use: [
+          'vue-loader'
+        ]
       },
       {
         test: /\.js$/,
@@ -97,8 +108,16 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new VueLoaderPlugin(),
-    new HtmlWebpackPlugin({
-      template: './index.html',
-    })
+    new HtmlWebpackPlugin(htmlOptions)
   ]
 }
+
+if (!isDev) {
+  webpackConfig.externals = {
+    'vue': 'Vue',
+    'element-ui': 'ELEMENT',
+    'vue-router': 'VueRouter'
+  }
+}
+
+module.exports = webpackConfig

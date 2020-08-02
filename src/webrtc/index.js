@@ -171,4 +171,11 @@ ZXWebRTC.prototype.download = function () {
   a.click()
 }
 
+ZXWebRTC.prototype.distroy = function () {
+  this.stream = null
+  this.mediaRecorder = null
+  this.recorderBuffer = null
+  this.$video = null
+}
+
 export default ZXWebRTC

@@ -1,110 +1,53 @@
 <template>
-<div class="web-rtc-wrapper">
-  <h1>WebRTC Live</h1>
-  <div>
-    <div class="video-wrapper">
-      <video autoplay ref="video" controls></video>
-    </div>
-    <div class="button-wrapper">
-      <el-button type="primary" @click="handleLive">{{liveBtnText}}</el-button>
-      <el-button type="danger" @click="handleRecord">{{recordBtnText}}</el-button>
-      <el-button type="warning" @click="handlePlay">Play</el-button>
-      <el-button type="warning" @click="handleDownload">Download</el-button>
-    </div>
-  </div>
-  <footer></footer>
-</div>
+  <el-container>
+    <el-header>
+      <el-menu
+        :default-active="activeIndex"
+        class="el-menu-demo"
+        mode="horizontal"
+        background-color="#545c64"
+        text-color="#fff"
+        active-text-color="#ffd04b">
+        <el-menu-item
+          v-for="(item, i) in menuItems"
+          :key="i"
+          :index="i + ''"
+          @click="handleMenuClick(item)">{{item.text}}</el-menu-item>
+      </el-menu>
+    </el-header>
+    <el-main>
+      <router-view></router-view>
+    </el-main>
+  </el-container>
 </template>
 
 <script>
-  import ZXWebRTC from './webrtc/index'
   export default {
-    computed: {
-      video() {
-        return this.$refs.video
-      },
-      recordBtnText() {
-        return this.isRecording ? 'Stop Record' : 'Start Record'
-      },
-      liveBtnText() {
-        return this.isLiving ? 'Stop' : 'Start'
-      },
-      canPlay() {
-        return this.webRtc && this.webRtc.canPlay()
-      },
-    },
     data() {
+      const menuItems = [
+        { path: '/', text: 'Home' },
+        { path: '/chat-room', text: 'ChatRoom' }
+      ]
+      const path = this.$route.path
       return {
-        webRtc: null,
-        isRecording: false,
-        isLiving: false,
+        activeIndex: menuItems.findIndex(item => item.path === path) + '',
+        menuItems
       }
     },
     methods: {
-      initWebRtc() {
-        this.$nextTick(() => {
-          const webRtc = new ZXWebRTC({
-            video: this.video,
-          })
-          console.log(webRtc)
-          this.webRtc = webRtc
-          this.webRtc.on('error', err => {
-            console.error(err)
-          })
-        })
-      },
-      handleLive() {
-        if (this.isLiving) {
-          this.webRtc.stopLive()
-        } else {
-          this.webRtc.startLive()
-        }
-        this.isLiving = !this.isLiving
-      },
-      handleRecord() {
-        if (this.isRecording) {
-          this.webRtc.stopRecord()
-        } else {
-          this.webRtc.startLive()
-          this.webRtc.startRecord()
-        }
-        this.isRecording = !this.isRecording
-      },
-      handlePlay() {
-        if (!this.webRtc.canPlay()) {
-          this.$message.error('没有可播放数据')
-          return
-        }
-        this.webRtc.play()
-      },
-      handleDownload() {
-        if (!this.webRtc.canPlay()) {
-          this.$message.error('没有可下载的数据')
-          return
-        }
-        this.webRtc.download()
+      handleMenuClick(item) {
+        this.$router.push(item.path)
       }
-    },
-    mounted() {
-      this.initWebRtc()
-    },
+    }
   }
 </script>
 
 <style lang="scss">
-  .web-rtc-wrapper {
-    text-align: center;
-    font-family: Arial;
-    h1 {
-      padding: 30px 0;
-    }
-    video {
-      width: 640px;
-      height: 360px;
-    }
-    .button-wrapper {
-      margin-top: 30px;
-    }
+  * {
+    margin: 0;
+    padding: 0;
   }
-
+  .el-header {
+    background: #545c64;
+  }
 </style>
