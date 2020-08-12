@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import ZXWebRTC from '../webrtc/index'
+  import ZXWebRTC from './webrtc/index'
 
   export default {
     computed: {

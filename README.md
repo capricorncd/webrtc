@@ -2,11 +2,25 @@
 
 live
 
-```bash
-# setup
-npm i
+## Build Setup
 
-# development
+```bash
+# install dependencies
+$ npm install
+# or
+$ npm i
+```
+
+### development
+
+```bash
+# serve with hot reload at localhost:3000
 npm run dev
-# serve with hot reload at localhost:8080
+```
+
+### launch server
+
+```bash
+# launch server, at localhost:8000
+npm run start
 ```

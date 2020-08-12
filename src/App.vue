@@ -26,6 +26,8 @@
     data() {
       const menuItems = [
         { path: '/', text: 'Home' },
+        { path: '/peer-connection', text: 'PeerConnection' },
+        { path: '/live', text: 'Live' },
         { path: '/chat-room', text: 'ChatRoom' }
       ]
       const path = this.$route.path
