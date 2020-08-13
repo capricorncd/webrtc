@@ -7,6 +7,12 @@ function isSupportMediaDevices() {
   return navigator.mediaDevices && navigator.mediaDevices.getUserMedia
 }
 
+function fmtSDP(sdp) {
+  const arr = sdp.split(/\r\n/)
+  return arr.join('\n')
+}
+
 export {
+  fmtSDP,
   isSupportMediaDevices
 }

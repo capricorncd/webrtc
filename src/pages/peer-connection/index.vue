@@ -2,17 +2,29 @@
   <div class="peer-connection-page-wrapper">
     <el-row :gutter="20">
       <el-col :span="12">
+        <h2>Local</h2>
         <Video @mounted="v => v1 = v"/>
       </el-col>
       <el-col :span="12">
+        <h2>Remote</h2>
         <Video @mounted="v => remoteVideo = v"/>
       </el-col>
     </el-row>
-    <el-row>
+    <el-row :gutter="20" style="margin: 10px -10px 20px;">
       <el-col :span="24">
         <el-button type="primary" @click="onStart" :disabled="isStared">Start</el-button>
         <el-button type="success" @click="onCall" :disabled="!isStared || isCalled">Call</el-button>
         <el-button type="danger" @click="onHangUp" :disabled="!isCalled">Hang Up</el-button>
+      </el-col>
+    </el-row>
+    <el-row :gutter="20">
+      <el-col :span="12">
+        <h2>Offer SDP</h2>
+        <el-input type="textarea" readonly :rows="30" :value="offerSDP"></el-input>
+      </el-col>
+      <el-col :span="12">
+        <h2>Answer SDP</h2>
+        <el-input type="textarea" readonly :rows="30" :value="answerSDP"></el-input>
       </el-col>
     </el-row>
   </div>
@@ -20,7 +32,7 @@
 
 <script>
   import Video from './video'
-  import { isSupportMediaDevices } from '../../utils'
+  import { isSupportMediaDevices, fmtSDP } from '../../utils'
 
   export default {
     components: {
@@ -34,7 +46,9 @@
         remoteVideo: null,
         stream: null,
         pc1: null,
-        pc2: null
+        pc2: null,
+        offerSDP: '',
+        answerSDP: '',
       }
     },
     methods: {
@@ -89,7 +103,8 @@
         }
         console.log('pc1.createOffer')
         this.pc1.createOffer(offerOptions).then(desc => {
-          console.log('pc1.createOffer', desc)
+          console.log('pc1 Offer', desc)
+          this.offerSDP = fmtSDP(desc.sdp)
           this.getOfferDesc(desc)
         }).catch(err => {
           this.isCalled = false
@@ -119,8 +134,10 @@
         // receive desc from signal
         this.pc2.setRemoteDescription(desc)
         console.log('pc2.setRemoteDescription end')
+        console.log('pc2.createAnswer')
         this.pc2.createAnswer().then(desc => {
-          console.log('pc2.createAnswer')
+          console.log('pc2 Answer', desc)
+          this.answerSDP = fmtSDP(desc.sdp)
           this.getAnswerDesc(desc)
         }).catch(err => {
           this.isCalled = false
@@ -142,7 +159,7 @@
   .peer-connection-page-wrapper {
     video {
       width: 100%;
-      min-height: 300px;
+      height: 300px;
       background: #ccc;
     }
   }
